@@ -245,6 +245,15 @@ void cProtocol172::SendBlockChanges(int a_ChunkX, int a_ChunkZ, const sSetBlockV
 
 
 
+void cProtocol172::SendCameraSetTo(const cEntity & a_Entity)
+{
+    LOGWARNING("SendCameraSet called on 1.7 protocol, ignored");
+}
+
+
+
+
+
 void cProtocol172::SendChat(const AString & a_Message, eChatType a_Type)
 {
 	ASSERT(m_State == 3);  // In game mode?
@@ -274,6 +283,16 @@ void cProtocol172::SendChat(const cCompositeChat & a_Message, eChatType a_Type, 
 	// Send the message to the client:
 	cPacketizer Pkt(*this, 0x02);
 	Pkt.WriteString(a_Message.CreateJsonString(a_ShouldUseChatPrefixes));
+}
+
+
+
+
+
+void cProtocol172::SendChatRaw(const AString & a_MessageRaw, eChatType a_Type)
+{
+    LOGWARNING("SendChatRaw called on 1.7 protocol, ignored");
+    // TODO: what is this, should it pass to SendChat somehow?
 }
 
 
