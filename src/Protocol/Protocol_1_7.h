@@ -1,5 +1,5 @@
 
-// Protocol17x.h
+// Protocol_1_7.h
 
 /*
 Declares the 1.7.x protocol classes:

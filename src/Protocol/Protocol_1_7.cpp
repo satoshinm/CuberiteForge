@@ -1,5 +1,5 @@
 
-// Protocol17x.cpp
+// Protocol_1_7.cpp
 
 /*
 Implements the 1.7.x protocol classes:
@@ -11,7 +11,7 @@ Implements the 1.7.x protocol classes:
 
 #include "Globals.h"
 #include "json/json.h"
-#include "Protocol17x.h"
+#include "Protocol_1_7.h"
 #include "ChunkDataSerializer.h"
 #include "PolarSSL++/Sha1Checksum.h"
 #include "Packetizer.h"
