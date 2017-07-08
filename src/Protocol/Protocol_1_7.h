@@ -69,7 +69,7 @@ public:
 	virtual void SendChat                       (const AString & a_Message, eChatType a_Type) override;
 	virtual void SendChat                       (const cCompositeChat & a_Message, eChatType a_Type, bool a_ShouldUseChatPrefixes) override;
 	virtual void SendChunkData                  (int a_ChunkX, int a_ChunkZ, cChunkDataSerializer & a_Serializer) override;
-	virtual void SendCollectEntity              (const cEntity & a_Entity, const cPlayer & a_Player) override;
+	virtual void SendCollectEntity              (const cEntity & a_Entity, const cPlayer & a_Player, int a_Count) override;
 	virtual void SendDestroyEntity              (const cEntity & a_Entity) override;
 	virtual void SendDetachEntity               (const cEntity & a_Entity, const cEntity & a_PreviousVehicle) override;
 	virtual void SendDisconnect                 (const AString & a_Reason) override;
@@ -114,7 +114,7 @@ public:
 	virtual void SendPluginMessage              (const AString & a_Channel, const AString & a_Message) override;
 	virtual void SendRemoveEntityEffect         (const cEntity & a_Entity, int a_EffectID) override;
 	virtual void SendResetTitle                 (void) override;
-	virtual void SendRespawn                    (eDimension a_Dimension, bool a_ShouldIgnoreDimensionChecks) override;
+	virtual void SendRespawn                    (eDimension a_Dimension) override;
 	virtual void SendScoreUpdate                (const AString & a_Objective, const AString & a_Player, cObjective::Score a_Score, Byte a_Mode) override;
 	virtual void SendScoreboardObjective        (const AString & a_Name, const AString & a_DisplayName, Byte a_Mode) override;
 	virtual void SendSetSubTitle                (const cCompositeChat & a_SubTitle) override;

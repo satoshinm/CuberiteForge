@@ -298,7 +298,7 @@ void cProtocol172::SendChunkData(int a_ChunkX, int a_ChunkZ, cChunkDataSerialize
 
 
 
-void cProtocol172::SendCollectEntity(const cEntity & a_Entity, const cPlayer & a_Player)
+void cProtocol172::SendCollectEntity(const cEntity & a_Entity, const cPlayer & a_Player, int a_Count)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1025,14 +1025,8 @@ void cProtocol172::SendResetTitle(void)
 
 
 
-void cProtocol172::SendRespawn(eDimension a_Dimension, bool a_ShouldIgnoreDimensionChecks)
+void cProtocol172::SendRespawn(eDimension a_Dimension)
 {
-	if ((m_LastSentDimension == a_Dimension) && !a_ShouldIgnoreDimensionChecks)
-	{
-		// Must not send a respawn for the world with the same dimension, the client goes cuckoo if we do (unless we are respawning from death)
-		return;
-	}
-
 	cPacketizer Pkt(*this, 0x07);  // Respawn packet
 	cPlayer * Player = m_Client->GetPlayer();
 	Pkt.WriteBEInt32(static_cast<int>(a_Dimension));
@@ -1916,7 +1910,7 @@ void cProtocol172::HandlePacketLoginEncryptionResponse(cByteBuffer & a_ByteBuffe
 	}
 
 	StartEncryption(DecryptedKey);
-	m_Client->HandleLogin(4, m_Client->GetUsername());
+	m_Client->HandleLogin(m_Client->GetUsername());
 }
 
 
@@ -1953,7 +1947,7 @@ void cProtocol172::HandlePacketLoginStart(cByteBuffer & a_ByteBuffer)
 		return;
 	}
 
-	m_Client->HandleLogin(4, Username);
+	m_Client->HandleLogin(Username);
 }
 
 
