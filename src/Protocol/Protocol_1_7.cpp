@@ -1177,8 +1177,49 @@ void cProtocol172::SendSoundEffect(const AString & a_SoundName, double a_X, doub
 {
 	ASSERT(m_State == 3);  // In game mode?
 
+	// New names: http://pokechu22.github.io/Burger/1.11.html#sounds
+	// Old names: https://github.com/SirCmpwn/Craft.Net/blob/bc20a3d3f6c60957ecd04cc7388e225387158eb1/source/Craft.Net.Common/SoundEffect.cs
+	// TODO: translate all
+	static std::map<AString, AString> sounds_new2old = {
+		{ "block.chest.open", "random.chestopen" },
+		{ "block.chest.close", "random.chestclosed" },
+
+		{ "entity.chicken.hurt", "mob.chicken.hurt" },
+		{ "entity.cow.hurt", "mob.cow.hurt" },
+		{ "entity.skeleton.hurt", "mob.skeleton.hurt" },
+		{ "entity.wolf.hurt", "mob.wolf.hurt" },
+		{ "entity.zombie.hurt", "mob.zombie.hurt" },
+		{ "entity.zombie_pigman.hurt", "mob.zombiepig.zpighurt" },
+		{ "entity.zombie.hurt", "mob.zombie.hurt" },
+		{ "entity.bat.hurt", "mob.bat.hurt" },
+		{ "entity.wither.hurt", "mob.wither.hurt" },
+
+		{ "entity.blaze.death", "mob.blaze.death" },
+		{ "entity.creeperdeath", "mob.creeperdeath" },
+		{ "entity.endermen.death", "mob.endermen.death" },
+		{ "entity.ghast.death", "mob.ghast.death" },
+		{ "entity.irongolem.death", "mob.irongolem.death" },
+		{ "entity.pig.death", "mob.pig.death" },
+		{ "entity.skeleton.death", "mob.skeleton.death" },
+		{ "entity.spider.death", "mob.spider.death" },
+		{ "entity.wolf.death", "mob.wolf.death" },
+		{ "entity.zombie.death", "mob.zombie.death" },
+		{ "entity.zombie_pigman.death", "mob.zombiepig.zpigdeath" },
+		{ "entity.pig.death", "mob.pig.death" },
+		{ "entity.zombie.death", "mob.zombie.death" },
+		{ "entity.bat.death", "mob.bat.death" },
+		{ "entity.wither.death", "mob.wither.death" },
+	};
+
+	if (sounds_new2old.find(a_SoundName) == sounds_new2old.end()) {
+		LOGWARNING("Ignoring untranslated named sound effect: %s", a_SoundName.c_str());
+		return;
+	}
+
+	AString & oldSoundName = sounds_new2old[a_SoundName];
+
 	cPacketizer Pkt(*this, 0x29);  // Sound Effect packet
-	Pkt.WriteString(a_SoundName);
+	Pkt.WriteString(oldSoundName);
 	Pkt.WriteBEInt32(static_cast<int>(a_X * 8.0));
 	Pkt.WriteBEInt32(static_cast<int>(a_Y * 8.0));
 	Pkt.WriteBEInt32(static_cast<int>(a_Z * 8.0));
