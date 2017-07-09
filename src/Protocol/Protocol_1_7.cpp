@@ -1506,12 +1506,20 @@ void cProtocol172::SendWholeInventory(const cWindow & a_Window)
 
 	cPacketizer Pkt(*this, 0x30);  // Window Items packet
 	Pkt.WriteBEInt8(a_Window.GetWindowID());
-	Pkt.WriteBEInt16(static_cast<short>(a_Window.GetNumSlots()));
+
+	// 1.7 does not support the 45th "offhand" slot
+	short maxSlots = static_cast<short>(a_Window.GetNumSlots());
+	if (maxSlots > 44) maxSlots = 44;
+	Pkt.WriteBEInt16(maxSlots);
+
 	cItems Slots;
 	a_Window.GetSlots(*(m_Client->GetPlayer()), Slots);
+	int i = 0;
 	for (cItems::const_iterator itr = Slots.begin(), end = Slots.end(); itr != end; ++itr)
 	{
+		if (i >= maxSlots) break;
 		WriteItem(Pkt, *itr);
+		++i;
 	}  // for itr - Slots[]
 }
 
