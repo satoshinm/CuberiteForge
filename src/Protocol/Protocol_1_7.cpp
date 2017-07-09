@@ -3,9 +3,9 @@
 
 /*
 Implements the 1.7.x protocol classes:
-	- cProtocol172
+	- cProtocol_1_7_2
 		- release 1.7.2 protocol (#4)
-	- cProtocol176
+	- cProtocol_1_7_6
 		- release 1.7.6 protocol (#5)
 */
 
@@ -98,9 +98,9 @@ extern bool g_ShouldLogCommIn, g_ShouldLogCommOut;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// cProtocol172:
+// cProtocol_1_7_2:
 
-cProtocol172::cProtocol172(cClientHandle * a_Client, const AString & a_ServerAddress, UInt16 a_ServerPort, UInt32 a_State) :
+cProtocol_1_7_2::cProtocol_1_7_2(cClientHandle * a_Client, const AString & a_ServerAddress, UInt16 a_ServerPort, UInt32 a_State) :
 	super(a_Client),
 	m_ServerAddress(a_ServerAddress),
 	m_ServerPort(a_ServerPort),
@@ -136,7 +136,7 @@ cProtocol172::cProtocol172(cClientHandle * a_Client, const AString & a_ServerAdd
 
 
 
-void cProtocol172::DataReceived(const char * a_Data, size_t a_Size)
+void cProtocol_1_7_2::DataReceived(const char * a_Data, size_t a_Size)
 {
 	if (m_IsEncrypted)
 	{
@@ -160,7 +160,7 @@ void cProtocol172::DataReceived(const char * a_Data, size_t a_Size)
 
 
 
-void cProtocol172::SendAttachEntity(const cEntity & a_Entity, const cEntity & a_Vehicle)
+void cProtocol_1_7_2::SendAttachEntity(const cEntity & a_Entity, const cEntity & a_Vehicle)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -174,7 +174,7 @@ void cProtocol172::SendAttachEntity(const cEntity & a_Entity, const cEntity & a_
 
 
 
-void cProtocol172::SendBlockAction(int a_BlockX, int a_BlockY, int a_BlockZ, char a_Byte1, char a_Byte2, BLOCKTYPE a_BlockType)
+void cProtocol_1_7_2::SendBlockAction(int a_BlockX, int a_BlockY, int a_BlockZ, char a_Byte1, char a_Byte2, BLOCKTYPE a_BlockType)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -191,7 +191,7 @@ void cProtocol172::SendBlockAction(int a_BlockX, int a_BlockY, int a_BlockZ, cha
 
 
 
-void cProtocol172::SendBlockBreakAnim(UInt32 a_EntityID, int a_BlockX, int a_BlockY, int a_BlockZ, char a_Stage)
+void cProtocol_1_7_2::SendBlockBreakAnim(UInt32 a_EntityID, int a_BlockX, int a_BlockY, int a_BlockZ, char a_Stage)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -207,7 +207,7 @@ void cProtocol172::SendBlockBreakAnim(UInt32 a_EntityID, int a_BlockX, int a_Blo
 
 
 
-void cProtocol172::SendBlockChange(int a_BlockX, int a_BlockY, int a_BlockZ, BLOCKTYPE a_BlockType, NIBBLETYPE a_BlockMeta)
+void cProtocol_1_7_2::SendBlockChange(int a_BlockX, int a_BlockY, int a_BlockZ, BLOCKTYPE a_BlockType, NIBBLETYPE a_BlockMeta)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_BlockY >= 0) && (a_BlockY < 256));
@@ -224,7 +224,7 @@ void cProtocol172::SendBlockChange(int a_BlockX, int a_BlockY, int a_BlockZ, BLO
 
 
 
-void cProtocol172::SendBlockChanges(int a_ChunkX, int a_ChunkZ, const sSetBlockVector & a_Changes)
+void cProtocol_1_7_2::SendBlockChanges(int a_ChunkX, int a_ChunkZ, const sSetBlockVector & a_Changes)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -245,7 +245,7 @@ void cProtocol172::SendBlockChanges(int a_ChunkX, int a_ChunkZ, const sSetBlockV
 
 
 
-void cProtocol172::SendCameraSetTo(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendCameraSetTo(const cEntity & a_Entity)
 {
     LOGWARNING("SendCameraSet called on 1.7 protocol, ignored");
 }
@@ -254,7 +254,7 @@ void cProtocol172::SendCameraSetTo(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendChat(const AString & a_Message, eChatType a_Type)
+void cProtocol_1_7_2::SendChat(const AString & a_Message, eChatType a_Type)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -271,7 +271,7 @@ void cProtocol172::SendChat(const AString & a_Message, eChatType a_Type)
 
 
 
-void cProtocol172::SendChat(const cCompositeChat & a_Message, eChatType a_Type, bool a_ShouldUseChatPrefixes)
+void cProtocol_1_7_2::SendChat(const cCompositeChat & a_Message, eChatType a_Type, bool a_ShouldUseChatPrefixes)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -289,7 +289,7 @@ void cProtocol172::SendChat(const cCompositeChat & a_Message, eChatType a_Type, 
 
 
 
-void cProtocol172::SendChatRaw(const AString & a_MessageRaw, eChatType a_Type)
+void cProtocol_1_7_2::SendChatRaw(const AString & a_MessageRaw, eChatType a_Type)
 {
     LOGWARNING("SendChatRaw called on 1.7 protocol, ignored");
     // TODO: what is this, should it pass to SendChat somehow?
@@ -299,7 +299,7 @@ void cProtocol172::SendChatRaw(const AString & a_MessageRaw, eChatType a_Type)
 
 
 
-void cProtocol172::SendChunkData(int a_ChunkX, int a_ChunkZ, cChunkDataSerializer & a_Serializer)
+void cProtocol_1_7_2::SendChunkData(int a_ChunkX, int a_ChunkZ, cChunkDataSerializer & a_Serializer)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -317,7 +317,7 @@ void cProtocol172::SendChunkData(int a_ChunkX, int a_ChunkZ, cChunkDataSerialize
 
 
 
-void cProtocol172::SendCollectEntity(const cEntity & a_Entity, const cPlayer & a_Player, int a_Count)
+void cProtocol_1_7_2::SendCollectEntity(const cEntity & a_Entity, const cPlayer & a_Player, int a_Count)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -330,7 +330,7 @@ void cProtocol172::SendCollectEntity(const cEntity & a_Entity, const cPlayer & a
 
 
 
-void cProtocol172::SendDestroyEntity(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendDestroyEntity(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -343,7 +343,7 @@ void cProtocol172::SendDestroyEntity(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendDetachEntity(const cEntity & a_Entity, const cEntity & a_PreviousVehicle)
+void cProtocol_1_7_2::SendDetachEntity(const cEntity & a_Entity, const cEntity & a_PreviousVehicle)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -357,7 +357,7 @@ void cProtocol172::SendDetachEntity(const cEntity & a_Entity, const cEntity & a_
 
 
 
-void cProtocol172::SendDisconnect(const AString & a_Reason)
+void cProtocol_1_7_2::SendDisconnect(const AString & a_Reason)
 {
 	switch (m_State)
 	{
@@ -382,7 +382,7 @@ void cProtocol172::SendDisconnect(const AString & a_Reason)
 
 
 
-void cProtocol172::SendEditSign(int a_BlockX, int a_BlockY, int a_BlockZ)
+void cProtocol_1_7_2::SendEditSign(int a_BlockX, int a_BlockY, int a_BlockZ)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -396,7 +396,7 @@ void cProtocol172::SendEditSign(int a_BlockX, int a_BlockY, int a_BlockZ)
 
 
 
-void cProtocol172::SendEntityEffect(const cEntity & a_Entity, int a_EffectID, int a_Amplifier, short a_Duration)
+void cProtocol_1_7_2::SendEntityEffect(const cEntity & a_Entity, int a_EffectID, int a_Amplifier, short a_Duration)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_EffectID >= 0) && (a_EffectID < 256));
@@ -413,7 +413,7 @@ void cProtocol172::SendEntityEffect(const cEntity & a_Entity, int a_EffectID, in
 
 
 
-void cProtocol172::SendEntityEquipment(const cEntity & a_Entity, short a_SlotNum, const cItem & a_Item)
+void cProtocol_1_7_2::SendEntityEquipment(const cEntity & a_Entity, short a_SlotNum, const cItem & a_Item)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -427,7 +427,7 @@ void cProtocol172::SendEntityEquipment(const cEntity & a_Entity, short a_SlotNum
 
 
 
-void cProtocol172::SendEntityHeadLook(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendEntityHeadLook(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -440,7 +440,7 @@ void cProtocol172::SendEntityHeadLook(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendEntityLook(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendEntityLook(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -454,7 +454,7 @@ void cProtocol172::SendEntityLook(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendEntityMetadata(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendEntityMetadata(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -468,7 +468,7 @@ void cProtocol172::SendEntityMetadata(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendEntityProperties(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendEntityProperties(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -481,7 +481,7 @@ void cProtocol172::SendEntityProperties(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendEntityRelMove(const cEntity & a_Entity, char a_RelX, char a_RelY, char a_RelZ)
+void cProtocol_1_7_2::SendEntityRelMove(const cEntity & a_Entity, char a_RelX, char a_RelY, char a_RelZ)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -496,7 +496,7 @@ void cProtocol172::SendEntityRelMove(const cEntity & a_Entity, char a_RelX, char
 
 
 
-void cProtocol172::SendEntityRelMoveLook(const cEntity & a_Entity, char a_RelX, char a_RelY, char a_RelZ)
+void cProtocol_1_7_2::SendEntityRelMoveLook(const cEntity & a_Entity, char a_RelX, char a_RelY, char a_RelZ)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -513,7 +513,7 @@ void cProtocol172::SendEntityRelMoveLook(const cEntity & a_Entity, char a_RelX, 
 
 
 
-void cProtocol172::SendEntityStatus(const cEntity & a_Entity, char a_Status)
+void cProtocol_1_7_2::SendEntityStatus(const cEntity & a_Entity, char a_Status)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -526,7 +526,7 @@ void cProtocol172::SendEntityStatus(const cEntity & a_Entity, char a_Status)
 
 
 
-void cProtocol172::SendEntityVelocity(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendEntityVelocity(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -542,7 +542,7 @@ void cProtocol172::SendEntityVelocity(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendExplosion(double a_BlockX, double a_BlockY, double a_BlockZ, float a_Radius, const cVector3iArray & a_BlocksAffected, const Vector3d & a_PlayerMotion)
+void cProtocol_1_7_2::SendExplosion(double a_BlockX, double a_BlockY, double a_BlockZ, float a_Radius, const cVector3iArray & a_BlocksAffected, const Vector3d & a_PlayerMotion)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -567,7 +567,7 @@ void cProtocol172::SendExplosion(double a_BlockX, double a_BlockY, double a_Bloc
 
 
 
-void cProtocol172::SendGameMode(eGameMode a_GameMode)
+void cProtocol_1_7_2::SendGameMode(eGameMode a_GameMode)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -580,7 +580,7 @@ void cProtocol172::SendGameMode(eGameMode a_GameMode)
 
 
 
-void cProtocol172::SendHealth(void)
+void cProtocol_1_7_2::SendHealth(void)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -595,7 +595,7 @@ void cProtocol172::SendHealth(void)
 
 
 
-void cProtocol172::SendHideTitle(void)
+void cProtocol_1_7_2::SendHideTitle(void)
 {
 	// Not implemented in this protocol version
 }
@@ -604,7 +604,7 @@ void cProtocol172::SendHideTitle(void)
 
 
 
-void cProtocol172::SendInventorySlot(char a_WindowID, short a_SlotNum, const cItem & a_Item)
+void cProtocol_1_7_2::SendInventorySlot(char a_WindowID, short a_SlotNum, const cItem & a_Item)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -618,7 +618,7 @@ void cProtocol172::SendInventorySlot(char a_WindowID, short a_SlotNum, const cIt
 
 
 
-void cProtocol172::SendKeepAlive(UInt32 a_PingID)
+void cProtocol_1_7_2::SendKeepAlive(UInt32 a_PingID)
 {
 	// Drop the packet if the protocol is not in the Game state yet (caused a client crash):
 	if (m_State != 3)
@@ -635,7 +635,7 @@ void cProtocol172::SendKeepAlive(UInt32 a_PingID)
 
 
 
-void cProtocol172::SendLogin(const cPlayer & a_Player, const cWorld & a_World)
+void cProtocol_1_7_2::SendLogin(const cPlayer & a_Player, const cWorld & a_World)
 {
 	// Send the Join Game packet:
 	{
@@ -665,7 +665,7 @@ void cProtocol172::SendLogin(const cPlayer & a_Player, const cWorld & a_World)
 
 
 
-void cProtocol172::SendLoginSuccess(void)
+void cProtocol_1_7_2::SendLoginSuccess(void)
 {
 	ASSERT(m_State == 2);  // State: login?
 
@@ -682,7 +682,7 @@ void cProtocol172::SendLoginSuccess(void)
 
 
 
-void cProtocol172::SendPaintingSpawn(const cPainting & a_Painting)
+void cProtocol_1_7_2::SendPaintingSpawn(const cPainting & a_Painting)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -699,7 +699,7 @@ void cProtocol172::SendPaintingSpawn(const cPainting & a_Painting)
 
 
 
-void cProtocol172::SendMapData(const cMap & a_Map, int a_DataStartX, int a_DataStartY)
+void cProtocol_1_7_2::SendMapData(const cMap & a_Map, int a_DataStartX, int a_DataStartY)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -754,7 +754,7 @@ void cProtocol172::SendMapData(const cMap & a_Map, int a_DataStartX, int a_DataS
 
 
 
-void cProtocol172::SendPickupSpawn(const cPickup & a_Pickup)
+void cProtocol_1_7_2::SendPickupSpawn(const cPickup & a_Pickup)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -782,7 +782,7 @@ void cProtocol172::SendPickupSpawn(const cPickup & a_Pickup)
 
 
 
-void cProtocol172::SendPlayerAbilities(void)
+void cProtocol_1_7_2::SendPlayerAbilities(void)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -811,7 +811,7 @@ void cProtocol172::SendPlayerAbilities(void)
 
 
 
-void cProtocol172::SendEntityAnimation(const cEntity & a_Entity, char a_Animation)
+void cProtocol_1_7_2::SendEntityAnimation(const cEntity & a_Entity, char a_Animation)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -824,7 +824,7 @@ void cProtocol172::SendEntityAnimation(const cEntity & a_Entity, char a_Animatio
 
 
 
-void cProtocol172::SendParticleEffect(const AString & a_ParticleName, float a_SrcX, float a_SrcY, float a_SrcZ, float a_OffsetX, float a_OffsetY, float a_OffsetZ, float a_ParticleData, int a_ParticleAmount)
+void cProtocol_1_7_2::SendParticleEffect(const AString & a_ParticleName, float a_SrcX, float a_SrcY, float a_SrcZ, float a_OffsetX, float a_OffsetY, float a_OffsetZ, float a_ParticleData, int a_ParticleAmount)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -844,7 +844,7 @@ void cProtocol172::SendParticleEffect(const AString & a_ParticleName, float a_Sr
 
 
 
-void cProtocol172::SendParticleEffect(const AString & a_ParticleName, Vector3f a_Src, Vector3f a_Offset, float a_ParticleData, int a_ParticleAmount, std::array<int, 2> a_Data)
+void cProtocol_1_7_2::SendParticleEffect(const AString & a_ParticleName, Vector3f a_Src, Vector3f a_Offset, float a_ParticleData, int a_ParticleAmount, std::array<int, 2> a_Data)
 {
 	// 1.72 doesn't support extra data
 	this->SendParticleEffect(a_ParticleName, a_Src.x, a_Src.y, a_Src.z, a_Offset.x, a_Offset.y, a_Offset.z, a_ParticleData, a_ParticleAmount);
@@ -854,7 +854,7 @@ void cProtocol172::SendParticleEffect(const AString & a_ParticleName, Vector3f a
 
 
 
-void cProtocol172::SendPlayerListAddPlayer(const cPlayer & a_Player)
+void cProtocol_1_7_2::SendPlayerListAddPlayer(const cPlayer & a_Player)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -868,7 +868,7 @@ void cProtocol172::SendPlayerListAddPlayer(const cPlayer & a_Player)
 
 
 
-void cProtocol172::SendPlayerListRemovePlayer(const cPlayer & a_Player)
+void cProtocol_1_7_2::SendPlayerListRemovePlayer(const cPlayer & a_Player)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -882,7 +882,7 @@ void cProtocol172::SendPlayerListRemovePlayer(const cPlayer & a_Player)
 
 
 
-void cProtocol172::SendPlayerListUpdateGameMode(const cPlayer & a_Player)
+void cProtocol_1_7_2::SendPlayerListUpdateGameMode(const cPlayer & a_Player)
 {
 	// Not implemented in this protocol version
 	UNUSED(a_Player);
@@ -892,7 +892,7 @@ void cProtocol172::SendPlayerListUpdateGameMode(const cPlayer & a_Player)
 
 
 
-void cProtocol172::SendPlayerListUpdatePing(const cPlayer & a_Player)
+void cProtocol_1_7_2::SendPlayerListUpdatePing(const cPlayer & a_Player)
 {
 	// It is a simple add player packet in this protocol.
 	SendPlayerListAddPlayer(a_Player);
@@ -902,7 +902,7 @@ void cProtocol172::SendPlayerListUpdatePing(const cPlayer & a_Player)
 
 
 
-void cProtocol172::SendPlayerListUpdateDisplayName(const cPlayer & a_Player, const AString & a_CustomName)
+void cProtocol_1_7_2::SendPlayerListUpdateDisplayName(const cPlayer & a_Player, const AString & a_CustomName)
 {
 	// Not implemented in this protocol version
 	UNUSED(a_Player);
@@ -913,7 +913,7 @@ void cProtocol172::SendPlayerListUpdateDisplayName(const cPlayer & a_Player, con
 
 
 
-void cProtocol172::SendPlayerMaxSpeed(void)
+void cProtocol_1_7_2::SendPlayerMaxSpeed(void)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -942,7 +942,7 @@ void cProtocol172::SendPlayerMaxSpeed(void)
 
 
 
-void cProtocol172::SendPlayerMoveLook(void)
+void cProtocol_1_7_2::SendPlayerMoveLook(void)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -964,7 +964,7 @@ void cProtocol172::SendPlayerMoveLook(void)
 
 
 
-void cProtocol172::SendPlayerPosition(void)
+void cProtocol_1_7_2::SendPlayerPosition(void)
 {
 	// There is no dedicated packet for this, send the whole thing:
 	SendPlayerMoveLook();
@@ -974,7 +974,7 @@ void cProtocol172::SendPlayerPosition(void)
 
 
 
-void cProtocol172::SendPlayerSpawn(const cPlayer & a_Player)
+void cProtocol_1_7_2::SendPlayerSpawn(const cPlayer & a_Player)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1006,7 +1006,7 @@ void cProtocol172::SendPlayerSpawn(const cPlayer & a_Player)
 
 
 
-void cProtocol172::SendPluginMessage(const AString & a_Channel, const AString & a_Message)
+void cProtocol_1_7_2::SendPluginMessage(const AString & a_Channel, const AString & a_Message)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT(a_Message.size() <= std::numeric_limits<UInt16>::max());
@@ -1021,7 +1021,7 @@ void cProtocol172::SendPluginMessage(const AString & a_Channel, const AString & 
 
 
 
-void cProtocol172::SendRemoveEntityEffect(const cEntity & a_Entity, int a_EffectID)
+void cProtocol_1_7_2::SendRemoveEntityEffect(const cEntity & a_Entity, int a_EffectID)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_EffectID >= 0) && (a_EffectID < 256));
@@ -1035,7 +1035,7 @@ void cProtocol172::SendRemoveEntityEffect(const cEntity & a_Entity, int a_Effect
 
 
 
-void cProtocol172::SendResetTitle(void)
+void cProtocol_1_7_2::SendResetTitle(void)
 {
 	// Not implemented in this protocol version
 }
@@ -1044,7 +1044,7 @@ void cProtocol172::SendResetTitle(void)
 
 
 
-void cProtocol172::SendRespawn(eDimension a_Dimension)
+void cProtocol_1_7_2::SendRespawn(eDimension a_Dimension)
 {
 	cPacketizer Pkt(*this, 0x07);  // Respawn packet
 	cPlayer * Player = m_Client->GetPlayer();
@@ -1059,7 +1059,7 @@ void cProtocol172::SendRespawn(eDimension a_Dimension)
 
 
 
-void cProtocol172::SendExperience (void)
+void cProtocol_1_7_2::SendExperience (void)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1074,7 +1074,7 @@ void cProtocol172::SendExperience (void)
 
 
 
-void cProtocol172::SendExperienceOrb(const cExpOrb & a_ExpOrb)
+void cProtocol_1_7_2::SendExperienceOrb(const cExpOrb & a_ExpOrb)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_ExpOrb.GetReward() >= 0) && (a_ExpOrb.GetReward() < SHRT_MAX));
@@ -1091,7 +1091,7 @@ void cProtocol172::SendExperienceOrb(const cExpOrb & a_ExpOrb)
 
 
 
-void cProtocol172::SendScoreboardObjective(const AString & a_Name, const AString & a_DisplayName, Byte a_Mode)
+void cProtocol_1_7_2::SendScoreboardObjective(const AString & a_Name, const AString & a_DisplayName, Byte a_Mode)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1105,7 +1105,7 @@ void cProtocol172::SendScoreboardObjective(const AString & a_Name, const AString
 
 
 
-void cProtocol172::SendScoreUpdate(const AString & a_Objective, const AString & a_Player, cObjective::Score a_Score, Byte a_Mode)
+void cProtocol_1_7_2::SendScoreUpdate(const AString & a_Objective, const AString & a_Player, cObjective::Score a_Score, Byte a_Mode)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1124,7 +1124,7 @@ void cProtocol172::SendScoreUpdate(const AString & a_Objective, const AString & 
 
 
 
-void cProtocol172::SendDisplayObjective(const AString & a_Objective, cScoreboard::eDisplaySlot a_Display)
+void cProtocol_1_7_2::SendDisplayObjective(const AString & a_Objective, cScoreboard::eDisplaySlot a_Display)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1137,7 +1137,7 @@ void cProtocol172::SendDisplayObjective(const AString & a_Objective, cScoreboard
 
 
 
-void cProtocol172::SendSetSubTitle(const cCompositeChat & a_SubTitle)
+void cProtocol_1_7_2::SendSetSubTitle(const cCompositeChat & a_SubTitle)
 {
 	// Not implemented in this protocol version
 }
@@ -1146,7 +1146,7 @@ void cProtocol172::SendSetSubTitle(const cCompositeChat & a_SubTitle)
 
 
 
-void cProtocol172::SendSetRawSubTitle(const AString & a_SubTitle)
+void cProtocol_1_7_2::SendSetRawSubTitle(const AString & a_SubTitle)
 {
 	// Not implemented in this protocol version
 }
@@ -1155,7 +1155,7 @@ void cProtocol172::SendSetRawSubTitle(const AString & a_SubTitle)
 
 
 
-void cProtocol172::SendSetTitle(const cCompositeChat & a_Title)
+void cProtocol_1_7_2::SendSetTitle(const cCompositeChat & a_Title)
 {
 	// Not implemented in this protocol version
 }
@@ -1164,7 +1164,7 @@ void cProtocol172::SendSetTitle(const cCompositeChat & a_Title)
 
 
 
-void cProtocol172::SendSetRawTitle(const AString & a_Title)
+void cProtocol_1_7_2::SendSetRawTitle(const AString & a_Title)
 {
 	// Not implemented in this protocol version
 }
@@ -1173,7 +1173,7 @@ void cProtocol172::SendSetRawTitle(const AString & a_Title)
 
 
 
-void cProtocol172::SendSoundEffect(const AString & a_SoundName, double a_X, double a_Y, double a_Z, float a_Volume, float a_Pitch)
+void cProtocol_1_7_2::SendSoundEffect(const AString & a_SoundName, double a_X, double a_Y, double a_Z, float a_Volume, float a_Pitch)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1231,7 +1231,7 @@ void cProtocol172::SendSoundEffect(const AString & a_SoundName, double a_X, doub
 
 
 
-void cProtocol172::SendSoundParticleEffect(const EffectID a_EffectID, int a_SrcX, int a_SrcY, int a_SrcZ, int a_Data)
+void cProtocol_1_7_2::SendSoundParticleEffect(const EffectID a_EffectID, int a_SrcX, int a_SrcY, int a_SrcZ, int a_Data)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_SrcY >= 0) && (a_SrcY < 256));
@@ -1249,7 +1249,7 @@ void cProtocol172::SendSoundParticleEffect(const EffectID a_EffectID, int a_SrcX
 
 
 
-void cProtocol172::SendSpawnFallingBlock(const cFallingBlock & a_FallingBlock)
+void cProtocol_1_7_2::SendSpawnFallingBlock(const cFallingBlock & a_FallingBlock)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1271,7 +1271,7 @@ void cProtocol172::SendSpawnFallingBlock(const cFallingBlock & a_FallingBlock)
 
 
 
-void cProtocol172::SendSpawnMob(const cMonster & a_Mob)
+void cProtocol_1_7_2::SendSpawnMob(const cMonster & a_Mob)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1295,7 +1295,7 @@ void cProtocol172::SendSpawnMob(const cMonster & a_Mob)
 
 
 
-void cProtocol172::SendSpawnObject(const cEntity & a_Entity, char a_ObjectType, int a_ObjectData, Byte a_Yaw, Byte a_Pitch)
+void cProtocol_1_7_2::SendSpawnObject(const cEntity & a_Entity, char a_ObjectType, int a_ObjectData, Byte a_Yaw, Byte a_Pitch)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1320,7 +1320,7 @@ void cProtocol172::SendSpawnObject(const cEntity & a_Entity, char a_ObjectType, 
 
 
 
-void cProtocol172::SendSpawnVehicle(const cEntity & a_Vehicle, char a_VehicleType, char a_VehicleSubType)
+void cProtocol_1_7_2::SendSpawnVehicle(const cEntity & a_Vehicle, char a_VehicleType, char a_VehicleSubType)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1345,7 +1345,7 @@ void cProtocol172::SendSpawnVehicle(const cEntity & a_Vehicle, char a_VehicleTyp
 
 
 
-void cProtocol172::SendStatistics(const cStatManager & a_Manager)
+void cProtocol_1_7_2::SendStatistics(const cStatManager & a_Manager)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1367,7 +1367,7 @@ void cProtocol172::SendStatistics(const cStatManager & a_Manager)
 
 
 
-void cProtocol172::SendTabCompletionResults(const AStringVector & a_Results)
+void cProtocol_1_7_2::SendTabCompletionResults(const AStringVector & a_Results)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1384,7 +1384,7 @@ void cProtocol172::SendTabCompletionResults(const AStringVector & a_Results)
 
 
 
-void cProtocol172::SendTeleportEntity(const cEntity & a_Entity)
+void cProtocol_1_7_2::SendTeleportEntity(const cEntity & a_Entity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1401,7 +1401,7 @@ void cProtocol172::SendTeleportEntity(const cEntity & a_Entity)
 
 
 
-void cProtocol172::SendThunderbolt(int a_BlockX, int a_BlockY, int a_BlockZ)
+void cProtocol_1_7_2::SendThunderbolt(int a_BlockX, int a_BlockY, int a_BlockZ)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1417,7 +1417,7 @@ void cProtocol172::SendThunderbolt(int a_BlockX, int a_BlockY, int a_BlockZ)
 
 
 
-void cProtocol172::SendTitleTimes(int a_FadeInTicks, int a_DisplayTicks, int a_FadeOutTicks)
+void cProtocol_1_7_2::SendTitleTimes(int a_FadeInTicks, int a_DisplayTicks, int a_FadeOutTicks)
 {
 	// Not implemented in this protocol version
 }
@@ -1426,7 +1426,7 @@ void cProtocol172::SendTitleTimes(int a_FadeInTicks, int a_DisplayTicks, int a_F
 
 
 
-void cProtocol172::SendTimeUpdate(Int64 a_WorldAge, Int64 a_TimeOfDay, bool a_DoDaylightCycle)
+void cProtocol_1_7_2::SendTimeUpdate(Int64 a_WorldAge, Int64 a_TimeOfDay, bool a_DoDaylightCycle)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	if (!a_DoDaylightCycle)
@@ -1444,7 +1444,7 @@ void cProtocol172::SendTimeUpdate(Int64 a_WorldAge, Int64 a_TimeOfDay, bool a_Do
 
 
 
-void cProtocol172::SendUnloadChunk(int a_ChunkX, int a_ChunkZ)
+void cProtocol_1_7_2::SendUnloadChunk(int a_ChunkX, int a_ChunkZ)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1460,7 +1460,7 @@ void cProtocol172::SendUnloadChunk(int a_ChunkX, int a_ChunkZ)
 
 
 
-void cProtocol172::SendUpdateBlockEntity(cBlockEntity & a_BlockEntity)
+void cProtocol_1_7_2::SendUpdateBlockEntity(cBlockEntity & a_BlockEntity)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1488,7 +1488,7 @@ void cProtocol172::SendUpdateBlockEntity(cBlockEntity & a_BlockEntity)
 
 
 
-void cProtocol172::SendUpdateSign(int a_BlockX, int a_BlockY, int a_BlockZ, const AString & a_Line1, const AString & a_Line2, const AString & a_Line3, const AString & a_Line4)
+void cProtocol_1_7_2::SendUpdateSign(int a_BlockX, int a_BlockY, int a_BlockZ, const AString & a_Line1, const AString & a_Line2, const AString & a_Line3, const AString & a_Line4)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_BlockY >= 0) && (a_BlockY < cChunkDef::Height));
@@ -1508,7 +1508,7 @@ void cProtocol172::SendUpdateSign(int a_BlockX, int a_BlockY, int a_BlockZ, cons
 
 
 
-void cProtocol172::SendUseBed(const cEntity & a_Entity, int a_BlockX, int a_BlockY, int a_BlockZ)
+void cProtocol_1_7_2::SendUseBed(const cEntity & a_Entity, int a_BlockX, int a_BlockY, int a_BlockZ)
 {
 	ASSERT(m_State == 3);  // In game mode?
 	ASSERT((a_BlockY >= 0) && (a_BlockY < cChunkDef::Height));
@@ -1524,7 +1524,7 @@ void cProtocol172::SendUseBed(const cEntity & a_Entity, int a_BlockX, int a_Bloc
 
 
 
-void cProtocol172::SendWeather(eWeather a_Weather)
+void cProtocol_1_7_2::SendWeather(eWeather a_Weather)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1541,7 +1541,7 @@ void cProtocol172::SendWeather(eWeather a_Weather)
 
 
 
-void cProtocol172::SendWholeInventory(const cWindow & a_Window)
+void cProtocol_1_7_2::SendWholeInventory(const cWindow & a_Window)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1568,7 +1568,7 @@ void cProtocol172::SendWholeInventory(const cWindow & a_Window)
 
 
 
-void cProtocol172::SendWindowClose(const cWindow & a_Window)
+void cProtocol_1_7_2::SendWindowClose(const cWindow & a_Window)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1580,7 +1580,7 @@ void cProtocol172::SendWindowClose(const cWindow & a_Window)
 
 
 
-void cProtocol172::SendWindowOpen(const cWindow & a_Window)
+void cProtocol_1_7_2::SendWindowOpen(const cWindow & a_Window)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1606,7 +1606,7 @@ void cProtocol172::SendWindowOpen(const cWindow & a_Window)
 
 
 
-void cProtocol172::SendWindowProperty(const cWindow & a_Window, short a_Property, short a_Value)
+void cProtocol_1_7_2::SendWindowProperty(const cWindow & a_Window, short a_Property, short a_Value)
 {
 	ASSERT(m_State == 3);  // In game mode?
 
@@ -1620,7 +1620,7 @@ void cProtocol172::SendWindowProperty(const cWindow & a_Window, short a_Property
 
 
 
-void cProtocol172::AddReceivedData(const char * a_Data, size_t a_Size)
+void cProtocol_1_7_2::AddReceivedData(const char * a_Data, size_t a_Size)
 {
 	// Write the incoming data into the comm log file:
 	if (g_ShouldLogCommIn)
@@ -1767,7 +1767,7 @@ void cProtocol172::AddReceivedData(const char * a_Data, size_t a_Size)
 
 
 
-bool cProtocol172::HandlePacket(cByteBuffer & a_ByteBuffer, UInt32 a_PacketType)
+bool cProtocol_1_7_2::HandlePacket(cByteBuffer & a_ByteBuffer, UInt32 a_PacketType)
 {
 	switch (m_State)
 	{
@@ -1853,7 +1853,7 @@ bool cProtocol172::HandlePacket(cByteBuffer & a_ByteBuffer, UInt32 a_PacketType)
 
 
 
-void cProtocol172::HandlePacketStatusPing(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketStatusPing(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEInt64, Int64, Timestamp);
 
@@ -1865,7 +1865,7 @@ void cProtocol172::HandlePacketStatusPing(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer)
 {
 	cServer * Server = cRoot::Get()->GetServer();
 	AString ServerDescription = Server->GetDescription();
@@ -1910,7 +1910,7 @@ void cProtocol172::HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketLoginEncryptionResponse(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketLoginEncryptionResponse(cByteBuffer & a_ByteBuffer)
 {
 	UInt16 EncKeyLength, EncNonceLength;
 	if (!a_ByteBuffer.ReadBEUInt16(EncKeyLength))
@@ -1985,7 +1985,7 @@ void cProtocol172::HandlePacketLoginEncryptionResponse(cByteBuffer & a_ByteBuffe
 
 
 
-void cProtocol172::HandlePacketLoginStart(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketLoginStart(cByteBuffer & a_ByteBuffer)
 {
 	AString Username;
 	if (!a_ByteBuffer.ReadVarUTF8String(Username))
@@ -2022,7 +2022,7 @@ void cProtocol172::HandlePacketLoginStart(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketAnimation(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketAnimation(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt32, UInt32, EntityID);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8,  UInt8,  Animation);
@@ -2033,7 +2033,7 @@ void cProtocol172::HandlePacketAnimation(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketBlockDig(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketBlockDig(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, Status);
 	HANDLE_READ(a_ByteBuffer, ReadBEInt32, Int32, BlockX);
@@ -2047,7 +2047,7 @@ void cProtocol172::HandlePacketBlockDig(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketBlockPlace(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketBlockPlace(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEInt32, Int32, BlockX);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, BlockY);
@@ -2066,7 +2066,7 @@ void cProtocol172::HandlePacketBlockPlace(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketChatMessage(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketChatMessage(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadVarUTF8String, AString, Message);
 	m_Client->HandleChat(Message);
@@ -2076,7 +2076,7 @@ void cProtocol172::HandlePacketChatMessage(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketClientSettings(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketClientSettings(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadVarUTF8String, AString, Locale);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8,       UInt8,   ViewDistance);
@@ -2094,7 +2094,7 @@ void cProtocol172::HandlePacketClientSettings(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketClientStatus(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketClientStatus(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, ActionID);
 	switch (ActionID)
@@ -2126,7 +2126,7 @@ void cProtocol172::HandlePacketClientStatus(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketCreativeInventoryAction(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketCreativeInventoryAction(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEInt16, Int16, SlotNum);
 	cItem Item;
@@ -2141,7 +2141,7 @@ void cProtocol172::HandlePacketCreativeInventoryAction(cByteBuffer & a_ByteBuffe
 
 
 
-void cProtocol172::HandlePacketEntityAction(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketEntityAction(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt32, UInt32, PlayerID);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8,  UInt8,  Action);
@@ -2161,7 +2161,7 @@ void cProtocol172::HandlePacketEntityAction(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketKeepAlive(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketKeepAlive(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt32, UInt32, KeepAliveID);
 	m_Client->HandleKeepAlive(KeepAliveID);
@@ -2171,7 +2171,7 @@ void cProtocol172::HandlePacketKeepAlive(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketPlayer(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketPlayer(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBool, bool, IsOnGround);
 	// TODO: m_Client->HandlePlayerOnGround(IsOnGround);
@@ -2181,7 +2181,7 @@ void cProtocol172::HandlePacketPlayer(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketPlayerAbilities(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketPlayerAbilities(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, Flags);
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, FlyingSpeed);
@@ -2205,7 +2205,7 @@ void cProtocol172::HandlePacketPlayerAbilities(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketPlayerLook(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketPlayerLook(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Yaw);
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Pitch);
@@ -2217,7 +2217,7 @@ void cProtocol172::HandlePacketPlayerLook(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketPlayerPos(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketPlayerPos(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEDouble, double, PosX);
 	HANDLE_READ(a_ByteBuffer, ReadBEDouble, double, PosY);
@@ -2231,7 +2231,7 @@ void cProtocol172::HandlePacketPlayerPos(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketPlayerPosLook(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketPlayerPosLook(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEDouble, double, PosX);
 	HANDLE_READ(a_ByteBuffer, ReadBEDouble, double, PosY);
@@ -2247,7 +2247,7 @@ void cProtocol172::HandlePacketPlayerPosLook(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketPluginMessage(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketPluginMessage(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadVarUTF8String, AString, Channel);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt16,      UInt16,  Length);
@@ -2279,7 +2279,7 @@ void cProtocol172::HandlePacketPluginMessage(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketSlotSelect(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketSlotSelect(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEInt16, Int16, SlotNum);
 	m_Client->HandleSlotSelected(SlotNum);
@@ -2289,7 +2289,7 @@ void cProtocol172::HandlePacketSlotSelect(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketSteerVehicle(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketSteerVehicle(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Forward);
 	HANDLE_READ(a_ByteBuffer, ReadBEFloat, float, Sideways);
@@ -2309,7 +2309,7 @@ void cProtocol172::HandlePacketSteerVehicle(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketTabComplete(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketTabComplete(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadVarUTF8String, AString, Text);
 	m_Client->HandleTabCompletion(Text);
@@ -2319,7 +2319,7 @@ void cProtocol172::HandlePacketTabComplete(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketUpdateSign(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketUpdateSign(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEInt32,       Int32,   BlockX);
 	HANDLE_READ(a_ByteBuffer, ReadBEInt16,       Int16,   BlockY);
@@ -2335,7 +2335,7 @@ void cProtocol172::HandlePacketUpdateSign(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketUseEntity(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketUseEntity(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt32, UInt32,  EntityID);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8,  UInt8, MouseButton);
@@ -2346,7 +2346,7 @@ void cProtocol172::HandlePacketUseEntity(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketEnchantItem(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketEnchantItem(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, WindowID);
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, Enchantment);
@@ -2358,7 +2358,7 @@ void cProtocol172::HandlePacketEnchantItem(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketWindowClick(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketWindowClick(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8,  UInt8,  WindowID);
 	HANDLE_READ(a_ByteBuffer, ReadBEInt16,  Int16,  SlotNum);
@@ -2410,7 +2410,7 @@ void cProtocol172::HandlePacketWindowClick(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandlePacketWindowClose(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_2::HandlePacketWindowClose(cByteBuffer & a_ByteBuffer)
 {
 	HANDLE_READ(a_ByteBuffer, ReadBEUInt8, UInt8, WindowID);
 	m_Client->HandleWindowClose(WindowID);
@@ -2420,7 +2420,7 @@ void cProtocol172::HandlePacketWindowClose(cByteBuffer & a_ByteBuffer)
 
 
 
-void cProtocol172::HandleVanillaPluginMessage(cByteBuffer & a_ByteBuffer, const AString & a_Channel, UInt16 a_PayloadLength)
+void cProtocol_1_7_2::HandleVanillaPluginMessage(cByteBuffer & a_ByteBuffer, const AString & a_Channel, UInt16 a_PayloadLength)
 {
 	if (a_Channel == "MC|AdvCdm")
 	{
@@ -2507,7 +2507,7 @@ void cProtocol172::HandleVanillaPluginMessage(cByteBuffer & a_ByteBuffer, const 
 
 
 
-void cProtocol172::SendData(const char * a_Data, size_t a_Size)
+void cProtocol_1_7_2::SendData(const char * a_Data, size_t a_Size)
 {
 	if (m_IsEncrypted)
 	{
@@ -2531,7 +2531,7 @@ void cProtocol172::SendData(const char * a_Data, size_t a_Size)
 
 
 
-void cProtocol172::SendPacket(cPacketizer & a_Packet)
+void cProtocol_1_7_2::SendPacket(cPacketizer & a_Packet)
 {
 	AString DataToSend;
 
@@ -2564,7 +2564,7 @@ void cProtocol172::SendPacket(cPacketizer & a_Packet)
 
 
 
-bool cProtocol172::ReadItem(cByteBuffer & a_ByteBuffer, cItem & a_Item)
+bool cProtocol_1_7_2::ReadItem(cByteBuffer & a_ByteBuffer, cItem & a_Item)
 {
 	HANDLE_PACKET_READ(a_ByteBuffer, ReadBEInt16, Int16, ItemType);
 	if (ItemType == -1)
@@ -2600,7 +2600,7 @@ bool cProtocol172::ReadItem(cByteBuffer & a_ByteBuffer, cItem & a_Item)
 
 
 
-void cProtocol172::ParseItemMetadata(cItem & a_Item, const AString & a_Metadata)
+void cProtocol_1_7_2::ParseItemMetadata(cItem & a_Item, const AString & a_Metadata)
 {
 	// Uncompress the GZIPped data:
 	AString Uncompressed;
@@ -2685,7 +2685,7 @@ void cProtocol172::ParseItemMetadata(cItem & a_Item, const AString & a_Metadata)
 
 
 
-void cProtocol172::StartEncryption(const Byte * a_Key)
+void cProtocol_1_7_2::StartEncryption(const Byte * a_Key)
 {
 	m_Encryptor.Init(a_Key, a_Key);
 	m_Decryptor.Init(a_Key, a_Key);
@@ -2707,7 +2707,7 @@ void cProtocol172::StartEncryption(const Byte * a_Key)
 
 
 
-eBlockFace cProtocol172::FaceIntToBlockFace(Int8 a_BlockFace)
+eBlockFace cProtocol_1_7_2::FaceIntToBlockFace(Int8 a_BlockFace)
 {
 	// Normalize the blockface values returned from the protocol
 	// Anything known gets mapped 1:1, everything else returns BLOCK_FACE_NONE
@@ -2727,7 +2727,7 @@ eBlockFace cProtocol172::FaceIntToBlockFace(Int8 a_BlockFace)
 
 
 
-void cProtocol172::WriteItem(cPacketizer & a_Pkt, const cItem & a_Item)
+void cProtocol_1_7_2::WriteItem(cPacketizer & a_Pkt, const cItem & a_Item)
 {
 	short ItemType = a_Item.m_ItemType;
 	ASSERT(ItemType >= -1);  // Check validity of packets in debug runtime
@@ -2812,7 +2812,7 @@ void cProtocol172::WriteItem(cPacketizer & a_Pkt, const cItem & a_Item)
 
 
 
-void cProtocol172::WriteBlockEntity(cPacketizer & a_Pkt, const cBlockEntity & a_BlockEntity)
+void cProtocol_1_7_2::WriteBlockEntity(cPacketizer & a_Pkt, const cBlockEntity & a_BlockEntity)
 {
 	cFastNBTWriter Writer;
 
@@ -2907,7 +2907,7 @@ void cProtocol172::WriteBlockEntity(cPacketizer & a_Pkt, const cBlockEntity & a_
 
 
 
-void cProtocol172::WriteEntityMetadata(cPacketizer & a_Pkt, const cEntity & a_Entity)
+void cProtocol_1_7_2::WriteEntityMetadata(cPacketizer & a_Pkt, const cEntity & a_Entity)
 {
 	// Common metadata:
 	Byte Flags = 0;
@@ -3034,7 +3034,7 @@ void cProtocol172::WriteEntityMetadata(cPacketizer & a_Pkt, const cEntity & a_En
 
 
 
-void cProtocol172::WriteMobMetadata(cPacketizer & a_Pkt, const cMonster & a_Mob)
+void cProtocol_1_7_2::WriteMobMetadata(cPacketizer & a_Pkt, const cMonster & a_Mob)
 {
 	// Living Enitiy Metadata
 	if (a_Mob.HasCustomName())
@@ -3248,7 +3248,7 @@ void cProtocol172::WriteMobMetadata(cPacketizer & a_Pkt, const cMonster & a_Mob)
 
 
 
-void cProtocol172::WriteEntityProperties(cPacketizer & a_Pkt, const cEntity & a_Entity)
+void cProtocol_1_7_2::WriteEntityProperties(cPacketizer & a_Pkt, const cEntity & a_Entity)
 {
 	if (!a_Entity.IsMob())
 	{
@@ -3269,9 +3269,9 @@ void cProtocol172::WriteEntityProperties(cPacketizer & a_Pkt, const cEntity & a_
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// cProtocol176:
+// cProtocol_1_7_6:
 
-cProtocol176::cProtocol176(cClientHandle * a_Client, const AString &a_ServerAddress, UInt16 a_ServerPort, UInt32 a_State) :
+cProtocol_1_7_6::cProtocol_1_7_6(cClientHandle * a_Client, const AString &a_ServerAddress, UInt16 a_ServerPort, UInt32 a_State) :
 	super(a_Client, a_ServerAddress, a_ServerPort, a_State)
 {
 }
@@ -3280,7 +3280,7 @@ cProtocol176::cProtocol176(cClientHandle * a_Client, const AString &a_ServerAddr
 
 
 
-void cProtocol176::SendPlayerSpawn(const cPlayer & a_Player)
+void cProtocol_1_7_6::SendPlayerSpawn(const cPlayer & a_Player)
 {
 	// Called to spawn another player for the client
 	cPacketizer Pkt(*this, 0x0c);  // Spawn Player packet
@@ -3321,7 +3321,7 @@ void cProtocol176::SendPlayerSpawn(const cPlayer & a_Player)
 
 
 
-void cProtocol176::HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer)
+void cProtocol_1_7_6::HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer)
 {
 	cServer * Server = cRoot::Get()->GetServer();
 	AString Motd = Server->GetDescription();

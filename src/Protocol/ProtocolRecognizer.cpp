@@ -1054,12 +1054,12 @@ bool cProtocolRecognizer::TryRecognizeLengthedProtocol(UInt32 a_PacketLengthRema
 	{
 		case PROTO_VERSION_1_7_2:
 		{
-			m_Protocol = new cProtocol172(m_Client, ServerAddress, ServerPort, NextState);
+			m_Protocol = new cProtocol_1_7_2(m_Client, ServerAddress, ServerPort, NextState);
 			return true;
 		}
 		case PROTO_VERSION_1_7_6:
 		{
-			m_Protocol = new cProtocol176(m_Client, ServerAddress, ServerPort, NextState);
+			m_Protocol = new cProtocol_1_7_6(m_Client, ServerAddress, ServerPort, NextState);
 			return true;
 		}
 		case PROTO_VERSION_1_8_0:
