@@ -7,6 +7,7 @@
 #include "Globals.h"
 
 #include "ProtocolRecognizer.h"
+#include "Protocol_1_7.h"
 #include "Protocol_1_8.h"
 #include "Protocol_1_9.h"
 #include "Protocol_1_10.h"
@@ -50,6 +51,8 @@ AString cProtocolRecognizer::GetVersionTextFromInt(int a_ProtocolVersion)
 {
 	switch (a_ProtocolVersion)
 	{
+		case PROTO_VERSION_1_7_2:   return "1.7.2";
+		case PROTO_VERSION_1_7_6:   return "1.7.6";
 		case PROTO_VERSION_1_8_0:   return "1.8";
 		case PROTO_VERSION_1_9_0:   return "1.9";
 		case PROTO_VERSION_1_9_1:   return "1.9.1";
@@ -1061,6 +1064,16 @@ bool cProtocolRecognizer::TryRecognizeLengthedProtocol(UInt32 a_PacketLengthRema
 	m_Buffer.CommitRead();
 	switch (ProtocolVersion)
 	{
+		case PROTO_VERSION_1_7_2:
+		{
+			m_Protocol = new cProtocol_1_7_2(m_Client, ServerAddress, ServerPort, NextState);
+			return true;
+		}
+		case PROTO_VERSION_1_7_6:
+		{
+			m_Protocol = new cProtocol_1_7_6(m_Client, ServerAddress, ServerPort, NextState);
+			return true;
+		}
 		case PROTO_VERSION_1_8_0:
 		{
 			m_Buffer.CommitRead();

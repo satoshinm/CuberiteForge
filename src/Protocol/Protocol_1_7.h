@@ -1,8 +1,13 @@
 
-// ProtocolRecognizer.h
+// Protocol_1_7.h
 
-// Interfaces to the cProtocolRecognizer class representing the meta-protocol that recognizes possibly multiple
-// protocol versions and redirects everything to them
+/*
+Declares the 1.7.x protocol classes:
+	- cProtocol_1_7_2
+		- release 1.7.2 protocol (#4)
+	- cProtocol_1_7_6
+		- release 1.7.6 protocol (#5)
+*/
 
 
 
@@ -13,45 +18,44 @@
 #include "Protocol.h"
 #include "../ByteBuffer.h"
 
+#ifdef _MSC_VER
+	#pragma warning(push)
+	#pragma warning(disable:4127)
+	#pragma warning(disable:4244)
+	#pragma warning(disable:4231)
+	#pragma warning(disable:4189)
+	#pragma warning(disable:4702)
+#endif
+
+#ifdef _MSC_VER
+	#pragma warning(pop)
+#endif
+
+#include "PolarSSL++/AesCfb128Decryptor.h"
+#include "PolarSSL++/AesCfb128Encryptor.h"
 
 
 
 
-// Adjust these if a new protocol is added or an old one is removed:
-#define MCS_CLIENT_VERSIONS "1.7.x, 1.8.x, 1.9.x, 1.10.x, 1.11.x, 1.12"
-#define MCS_PROTOCOL_VERSIONS "4, 5, 47, 107, 108, 109, 110, 210, 315, 316, 335"
-#define MCS_LATEST_PROTOCOL_VERSION 335
+
+// fwd:
+namespace Json
+{
+	class Value;
+}
 
 
 
 
 
-class cProtocolRecognizer :
+class cProtocol_1_7_2 :
 	public cProtocol
 {
 	typedef cProtocol super;
 
 public:
-	enum
-	{
-		PROTO_VERSION_1_7_2  = 4,
-		PROTO_VERSION_1_7_6  = 5,
-		PROTO_VERSION_1_8_0  = 47,
-		PROTO_VERSION_1_9_0  = 107,
-		PROTO_VERSION_1_9_1  = 108,
-		PROTO_VERSION_1_9_2  = 109,
-		PROTO_VERSION_1_9_4  = 110,
-		PROTO_VERSION_1_10_0 = 210,
-		PROTO_VERSION_1_11_0 = 315,
-		PROTO_VERSION_1_11_1 = 316,
-		PROTO_VERSION_1_12   = 335,
-	} ;
 
-	cProtocolRecognizer(cClientHandle * a_Client);
-	virtual ~cProtocolRecognizer() override;
-
-	/** Translates protocol version number into protocol version text: 49 -> "1.4.4" */
-	static AString GetVersionTextFromInt(int a_ProtocolVersion);
+	cProtocol_1_7_2(cClientHandle * a_Client, const AString & a_ServerAddress, UInt16 a_ServerPort, UInt32 a_State);
 
 	/** Called when client sends some data: */
 	virtual void DataReceived(const char * a_Data, size_t a_Size) override;
@@ -59,7 +63,7 @@ public:
 	/** Sending stuff to clients (alphabetically sorted): */
 	virtual void SendAttachEntity               (const cEntity & a_Entity, const cEntity & a_Vehicle) override;
 	virtual void SendBlockAction                (int a_BlockX, int a_BlockY, int a_BlockZ, char a_Byte1, char a_Byte2, BLOCKTYPE a_BlockType) override;
-	virtual void SendBlockBreakAnim             (UInt32 a_EntityID, int a_BlockX, int a_BlockY, int a_BlockZ, char a_Stage) override;
+	virtual void SendBlockBreakAnim	            (UInt32 a_EntityID, int a_BlockX, int a_BlockY, int a_BlockZ, char a_Stage) override;
 	virtual void SendBlockChange                (int a_BlockX, int a_BlockY, int a_BlockZ, BLOCKTYPE a_BlockType, NIBBLETYPE a_BlockMeta) override;
 	virtual void SendBlockChanges               (int a_ChunkX, int a_ChunkZ, const sSetBlockVector & a_Changes) override;
 	virtual void SendCameraSetTo                (const cEntity & a_Entity) override;
@@ -71,7 +75,9 @@ public:
 	virtual void SendDestroyEntity              (const cEntity & a_Entity) override;
 	virtual void SendDetachEntity               (const cEntity & a_Entity, const cEntity & a_PreviousVehicle) override;
 	virtual void SendDisconnect                 (const AString & a_Reason) override;
+	virtual void SendDisplayObjective           (const AString & a_Objective, cScoreboard::eDisplaySlot a_Display) override;
 	virtual void SendEditSign                   (int a_BlockX, int a_BlockY, int a_BlockZ) override;  ///< Request the client to open up the sign editor for the sign (1.6+)
+	virtual void SendEntityAnimation            (const cEntity & a_Entity, char a_Animation) override;
 	virtual void SendEntityEffect               (const cEntity & a_Entity, int a_EffectID, int a_Amplifier, short a_Duration) override;
 	virtual void SendEntityEquipment            (const cEntity & a_Entity, short a_SlotNum, const cItem & a_Item) override;
 	virtual void SendEntityHeadLook             (const cEntity & a_Entity) override;
@@ -82,6 +88,8 @@ public:
 	virtual void SendEntityRelMoveLook          (const cEntity & a_Entity, char a_RelX, char a_RelY, char a_RelZ) override;
 	virtual void SendEntityStatus               (const cEntity & a_Entity, char a_Status) override;
 	virtual void SendEntityVelocity             (const cEntity & a_Entity) override;
+	virtual void SendExperience                 (void) override;
+	virtual void SendExperienceOrb              (const cExpOrb & a_ExpOrb) override;
 	virtual void SendExplosion                  (double a_BlockX, double a_BlockY, double a_BlockZ, float a_Radius, const cVector3iArray & a_BlocksAffected, const Vector3d & a_PlayerMotion) override;
 	virtual void SendGameMode                   (eGameMode a_GameMode) override;
 	virtual void SendHealth                     (void) override;
@@ -91,12 +99,11 @@ public:
 	virtual void SendLogin                      (const cPlayer & a_Player, const cWorld & a_World) override;
 	virtual void SendLoginSuccess               (void) override;
 	virtual void SendMapData                    (const cMap & a_Map, int a_DataStartX, int a_DataStartY) override;
+	virtual void SendPaintingSpawn              (const cPainting & a_Painting) override;
 	virtual void SendParticleEffect             (const AString & a_ParticleName, float a_SrcX, float a_SrcY, float a_SrcZ, float a_OffsetX, float a_OffsetY, float a_OffsetZ, float a_ParticleData, int a_ParticleAmount) override;
 	virtual void SendParticleEffect             (const AString & a_ParticleName, Vector3f a_Src, Vector3f a_Offset, float a_ParticleData, int a_ParticleAmount, std::array<int, 2> a_Data) override;
-	virtual void SendPaintingSpawn              (const cPainting & a_Painting) override;
 	virtual void SendPickupSpawn                (const cPickup & a_Pickup) override;
 	virtual void SendPlayerAbilities            (void) override;
-	virtual void SendEntityAnimation            (const cEntity & a_Entity, char a_Animation) override;
 	virtual void SendPlayerListAddPlayer        (const cPlayer & a_Player) override;
 	virtual void SendPlayerListRemovePlayer     (const cPlayer & a_Player) override;
 	virtual void SendPlayerListUpdateGameMode   (const cPlayer & a_Player) override;
@@ -110,11 +117,8 @@ public:
 	virtual void SendRemoveEntityEffect         (const cEntity & a_Entity, int a_EffectID) override;
 	virtual void SendResetTitle                 (void) override;
 	virtual void SendRespawn                    (eDimension a_Dimension) override;
-	virtual void SendExperience                 (void) override;
-	virtual void SendExperienceOrb              (const cExpOrb & a_ExpOrb) override;
-	virtual void SendScoreboardObjective        (const AString & a_Name, const AString & a_DisplayName, Byte a_Mode) override;
 	virtual void SendScoreUpdate                (const AString & a_Objective, const AString & a_Player, cObjective::Score a_Score, Byte a_Mode) override;
-	virtual void SendDisplayObjective           (const AString & a_Objective, cScoreboard::eDisplaySlot a_Display) override;
+	virtual void SendScoreboardObjective        (const AString & a_Name, const AString & a_DisplayName, Byte a_Mode) override;
 	virtual void SendSetSubTitle                (const cCompositeChat & a_SubTitle) override;
 	virtual void SendSetRawSubTitle             (const AString & a_SubTitle) override;
 	virtual void SendSetTitle                   (const cCompositeChat & a_Title) override;
@@ -141,37 +145,134 @@ public:
 	virtual void SendWindowOpen                 (const cWindow & a_Window) override;
 	virtual void SendWindowProperty             (const cWindow & a_Window, short a_Property, short a_Value) override;
 
-	virtual AString GetAuthServerID(void) override;
-
-	virtual void SendData(const char * a_Data, size_t a_Size) override;
+	virtual AString GetAuthServerID(void) override { return m_AuthServerID; }
 
 protected:
-	/** The recognized protocol */
-	cProtocol * m_Protocol;
 
-	/** Buffer for the incoming data until we recognize the protocol */
-	cByteBuffer m_Buffer;
+	AString m_ServerAddress;
 
-	/** Is a server list ping for an unrecognized version currently occuring? */
-	bool m_InPingForUnrecognizedVersion;
+	UInt16 m_ServerPort;
 
-	// Packet handlers while in status state (m_InPingForUnrecognizedVersion == true)
-	void HandlePacketStatusRequest();
-	void HandlePacketStatusPing();
+	AString m_AuthServerID;
 
-	/** Tries to recognize protocol based on m_Buffer contents; returns true if recognized */
-	bool TryRecognizeProtocol(void);
+	/** State of the protocol. 1 = status, 2 = login, 3 = game */
+	UInt32 m_State;
 
-	/** Tries to recognize a protocol in the lengthed family (1.7+), based on m_Buffer; returns true if recognized.
-	The packet length and type have already been read, type is 0
-	The number of bytes remaining in the packet is passed as a_PacketLengthRemaining. */
-	bool TryRecognizeLengthedProtocol(UInt32 a_PacketLengthRemaining);
+	/** Buffer for the received data */
+	cByteBuffer m_ReceivedData;
 
-	/** Sends a single packet contained within the cPacketizer class.
-	The cPacketizer's destructor calls this to send the contained packet; protocol may transform the data (compression in 1.8 etc). */
-	virtual void SendPacket(cPacketizer & a_Pkt) override;
+	bool m_IsEncrypted;
+
+	cAesCfb128Decryptor m_Decryptor;
+	cAesCfb128Encryptor m_Encryptor;
+
+	/** The logfile where the comm is logged, when g_ShouldLogComm is true */
+	cFile m_CommLogFile;
+
+	/** The dimension that was last sent to a player in a Respawn or Login packet.
+	Used to avoid Respawning into the same dimension, which confuses the client. */
+	eDimension m_LastSentDimension;
+
+
+	/** Adds the received (unencrypted) data to m_ReceivedData, parses complete packets */
+	void AddReceivedData(const char * a_Data, size_t a_Size);
+
+	/** Reads and handles the packet. The packet length and type have already been read.
+	Returns true if the packet was understood, false if it was an unknown packet
+	*/
+	bool HandlePacket(cByteBuffer & a_ByteBuffer, UInt32 a_PacketType);
+
+	// Packet handlers while in the Status state (m_State == 1):
+	void HandlePacketStatusPing(cByteBuffer & a_ByteBuffer);
+	virtual void HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer);
+
+	// Packet handlers while in the Login state (m_State == 2):
+	void HandlePacketLoginEncryptionResponse(cByteBuffer & a_ByteBuffer);
+	void HandlePacketLoginStart(cByteBuffer & a_ByteBuffer);
+
+	// Packet handlers while in the Game state (m_State == 3):
+	void HandlePacketAnimation              (cByteBuffer & a_ByteBuffer);
+	void HandlePacketBlockDig               (cByteBuffer & a_ByteBuffer);
+	void HandlePacketBlockPlace             (cByteBuffer & a_ByteBuffer);
+	void HandlePacketChatMessage            (cByteBuffer & a_ByteBuffer);
+	void HandlePacketClientSettings         (cByteBuffer & a_ByteBuffer);
+	void HandlePacketClientStatus           (cByteBuffer & a_ByteBuffer);
+	void HandlePacketCreativeInventoryAction(cByteBuffer & a_ByteBuffer);
+	void HandlePacketEntityAction           (cByteBuffer & a_ByteBuffer);
+	void HandlePacketKeepAlive              (cByteBuffer & a_ByteBuffer);
+	void HandlePacketPlayer                 (cByteBuffer & a_ByteBuffer);
+	void HandlePacketPlayerAbilities        (cByteBuffer & a_ByteBuffer);
+	void HandlePacketPlayerLook             (cByteBuffer & a_ByteBuffer);
+	void HandlePacketPlayerPos              (cByteBuffer & a_ByteBuffer);
+	void HandlePacketPlayerPosLook          (cByteBuffer & a_ByteBuffer);
+	void HandlePacketPluginMessage          (cByteBuffer & a_ByteBuffer);
+	void HandlePacketSlotSelect             (cByteBuffer & a_ByteBuffer);
+	void HandlePacketSteerVehicle           (cByteBuffer & a_ByteBuffer);
+	void HandlePacketTabComplete            (cByteBuffer & a_ByteBuffer);
+	void HandlePacketUpdateSign             (cByteBuffer & a_ByteBuffer);
+	void HandlePacketUseEntity              (cByteBuffer & a_ByteBuffer);
+	void HandlePacketEnchantItem            (cByteBuffer & a_ByteBuffer);
+	void HandlePacketWindowClick            (cByteBuffer & a_ByteBuffer);
+	void HandlePacketWindowClose            (cByteBuffer & a_ByteBuffer);
+
+	/** Parses Vanilla plugin messages into specific ClientHandle calls.
+	The message payload is still in the bytebuffer, to be read by this function. */
+	void HandleVanillaPluginMessage(cByteBuffer & a_ByteBuffer, const AString & a_Channel, UInt16 a_PayloadLength);
+
+	/** Sends the data to the client, encrypting them if needed. */
+	virtual void SendData(const char * a_Data, size_t a_Size) override;
+
+	/** Sends the packet to the client. Called by the cPacketizer's destructor. */
+	virtual void SendPacket(cPacketizer & a_Packet) override;
+
+	void SendCompass(const cWorld & a_World);
+
+	/** Reads an item out of the received data, sets a_Item to the values read. Returns false if not enough received data */
+	virtual bool ReadItem(cByteBuffer & a_ByteBuffer, cItem & a_Item);
+
+	/** Parses item metadata as read by ReadItem(), into the item enchantments. */
+	void ParseItemMetadata(cItem & a_Item, const AString & a_Metadata);
+
+	void StartEncryption(const Byte * a_Key);
+
+	/** Converts the BlockFace received by the protocol into eBlockFace constants.
+	If the received value doesn't match any of our eBlockFace constants, BLOCK_FACE_NONE is returned. */
+	eBlockFace FaceIntToBlockFace(Int8 a_FaceInt);
+
+	/** Writes the item data into a packet. */
+	void WriteItem(cPacketizer & a_Pkt, const cItem & a_Item);
+
+	/** Writes the metadata for the specified entity, not including the terminating 0x7f. */
+	void WriteEntityMetadata(cPacketizer & a_Pkt, const cEntity & a_Entity);
+
+	/** Writes the mob-specific metadata for the specified mob */
+	void WriteMobMetadata(cPacketizer & a_Pkt, const cMonster & a_Mob);
+
+	/** Writes the entity properties for the specified entity, including the Count field. */
+	void WriteEntityProperties(cPacketizer & a_Pkt, const cEntity & a_Entity);
+
+	/** Writes the block entity data for the specified block entity into the packet. */
+	void WriteBlockEntity(cPacketizer & a_Pkt, const cBlockEntity & a_BlockEntity);
 } ;
 
+
+
+
+
+/** The version 5 lengthed protocol, used by 1.7.6 through 1.7.9. */
+class cProtocol_1_7_6 :
+	public cProtocol_1_7_2
+{
+	typedef cProtocol_1_7_2 super;
+
+public:
+	cProtocol_1_7_6(cClientHandle * a_Client, const AString & a_ServerAddress, UInt16 a_ServerPort, UInt32 a_State);
+
+	// cProtocol_1_7_2 overrides:
+	virtual void SendPlayerSpawn(const cPlayer & a_Player) override;
+	virtual void HandlePacketStatusRequest(cByteBuffer & a_ByteBuffer) override;
+
+} ;
 
 
 
