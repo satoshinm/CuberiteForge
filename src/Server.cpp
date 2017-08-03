@@ -237,6 +237,48 @@ bool cServer::InitServer(cSettingsRepositoryInterface & a_Settings, bool a_Shoul
 
 
 
+bool cServer::RegisterForgeMod(AString & a_ModName, AString & a_ModVersion, UInt32 a_ProtocolVersionNumber)
+{
+	auto & Mods = GetRegisteredForgeMods(a_ProtocolVersionNumber);
+
+	return Mods.insert({a_ModName, a_ModVersion}).second;
+}
+
+
+
+
+
+void cServer::UnregisterForgeMod(AString &a_ModName, UInt32 a_ProtocolVersionNumber)
+{
+	auto & Mods = GetRegisteredForgeMods(a_ProtocolVersionNumber);
+
+	auto it = Mods.find(a_ModName);
+	if (it != Mods.end())
+	{
+		Mods.erase(it);
+	}
+}
+
+
+
+
+AStringMap & cServer::GetRegisteredForgeMods(const UInt32 a_Protocol)
+{
+	auto it = m_ForgeModsByVersion.find(a_Protocol);
+
+	if (it == m_ForgeModsByVersion.end())
+	{
+		AStringMap mods;
+		m_ForgeModsByVersion.insert({a_Protocol, mods});
+		return m_ForgeModsByVersion.find(a_Protocol)->second;
+	}
+
+	return it->second;
+}
+
+
+
+
 bool cServer::IsPlayerInQueue(AString a_Username)
 {
 	cCSLock Lock(m_CSClients);

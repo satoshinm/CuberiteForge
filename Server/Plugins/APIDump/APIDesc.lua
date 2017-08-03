@@ -1348,6 +1348,16 @@ end
 					},
 					Notes = "Returns the brand that the client has sent in their MC|Brand plugin message.",
 				},
+				GetForgeMods =
+				{
+					Returns =
+					{
+						{
+							Type = "table",
+						},
+					},
+					Notes = "Returns the Forge mods installed on the client.",
+				},
 				GetIPString =
 				{
 					Returns =
@@ -1465,6 +1475,16 @@ end
 						},
 					},
 					Notes = "Returns true if the client has registered to receive messages on the specified plugin channel.",
+				},
+				IsForgeClient =
+				{
+					Returns =
+					{
+						{
+							Type = "boolean",
+						},
+					},
+					Notes = "Returns true if the client is modded with Forge.",
 				},
 				IsUUIDOnline =
 				{
@@ -11795,6 +11815,25 @@ end
 					},
 					Notes = "Returns true if the specified player is queued to be transferred to a World.",
 				},
+				RegisterForgeMod =
+				{
+					Params =
+					{
+						{
+							Name = "ModName",
+							Type = "string",
+						},
+						{
+							Name = "ModVersion",
+							Type = "string",
+						},
+						{
+							Name = "ProtocolVersionNumber",
+							Type = "number",
+						},
+					},
+					Notes = "Add a Forge mod name/version to the server ping list.",
+				},
 				SetMaxPlayers =
 				{
 					Params =
@@ -11815,6 +11854,21 @@ end
 						},
 					},
 					Notes = "Returns true iff the server is set to authenticate players (\"online mode\").",
+				},
+				UnregisterForgeMod =
+				{
+					Params =
+					{
+						{
+							Name = "ModName",
+							Type = "string",
+						},
+						{
+							Name = "ProtocolVersionNumber",
+							Type = "number",
+						},
+					},
+					Notes = "Remove a Forge mod name/version from the server ping list.",
 				},
 			},
 		},

@@ -64,6 +64,7 @@ float cClientHandle::FASTBREAK_PERCENTAGE;
 
 cClientHandle::cClientHandle(const AString & a_IPString, int a_ViewDistance) :
 	m_LastSentDimension(dimNotSet),
+	m_ForgeHandshake(this),
 	m_CurrentViewDistance(a_ViewDistance),
 	m_RequestedViewDistance(a_ViewDistance),
 	m_IPString(a_IPString),
@@ -327,7 +328,6 @@ void cClientHandle::Authenticate(const AString & a_Name, const AString & a_UUID,
 	// Atomically increment player count (in server thread)
 	cRoot::Get()->GetServer()->PlayerCreated();
 
-	cWorld * World;
 	{
 		cCSLock lock(m_CSState);
 		/*
@@ -358,6 +358,25 @@ void cClientHandle::Authenticate(const AString & a_Name, const AString & a_UUID,
 		// Send login success (if the protocol supports it):
 		m_Protocol->SendLoginSuccess();
 
+		if (m_ForgeHandshake.m_IsForgeClient)
+		{
+			m_ForgeHandshake.BeginForgeHandshake(a_Name, a_UUID, a_Properties);
+		}
+		else
+		{
+			FinishAuthenticate(a_Name, a_UUID, a_Properties);
+		}
+	}
+}
+
+
+
+
+
+void cClientHandle::FinishAuthenticate(const AString & a_Name, const AString & a_UUID, const Json::Value & a_Properties)
+{
+	cWorld * World;
+	{
 		// Spawn player (only serversided, so data is loaded)
 		m_Player = new cPlayer(m_Self, GetUsername());
 		/*
@@ -859,6 +878,10 @@ void cClientHandle::HandlePluginMessage(const AString & a_Channel, const AString
 	else if (a_Channel == "UNREGISTER")
 	{
 		UnregisterPluginChannels(BreakApartPluginChannels(a_Message));
+	}
+	else if (a_Channel == "FML|HS")
+	{
+		m_ForgeHandshake.DataReceived(this, a_Message.c_str(), a_Message.size());
 	}
 	else if (!HasPluginChannel(a_Channel))
 	{
