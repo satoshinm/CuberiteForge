@@ -70,7 +70,7 @@ void cForgeHandshake::AugmentServerListPing(Json::Value & a_ResponseValue)
 	auto ProtocolVersion = m_Client->GetProtocolVersion();
 	auto & Mods = cRoot::Get()->GetServer()->GetRegisteredForgeMods(ProtocolVersion);
 
-	if (Mods.size() == 0)
+	if (Mods.empty())
 	{
 		return;
 	}
@@ -147,7 +147,7 @@ AStringMap cForgeHandshake::ParseModList(const char * a_Data, size_t a_Size)
 
 	if (a_Size < 4)
 	{
-		SetError(Printf("ParseModList invalid packet, missing length (size=" SIZE_T_FMT ")", a_Size));
+		SetError(Printf("ParseModList invalid packet, missing length (size = " SIZE_T_FMT ")", a_Size));
 		return Mods;
 	}
 
@@ -160,17 +160,17 @@ AStringMap cForgeHandshake::ParseModList(const char * a_Data, size_t a_Size)
 		return Mods;
 	}
 
-	for (size_t i = 0; i < NumMods; ++i)
+	for (UInt32 i = 0; i < NumMods; ++i)
 	{
 		AString Name, Version;
 		if (!Buf.ReadVarUTF8String(Name))
 		{
-			SetError(Printf("ParseModList failed to read mod name at i = " SIZE_T_FMT, i));
+			SetError(Printf("ParseModList failed to read mod name at i = %d", i));
 			break;
 		}
 		if (!Buf.ReadVarUTF8String(Version))
 		{
-			SetError(Printf("ParseModList failed to read mod version at i = " SIZE_T_FMT, i));
+			SetError(Printf("ParseModList failed to read mod version at i = %d", i));
 			break;
 		}
 		Mods.insert({Name, Version});
@@ -229,22 +229,19 @@ void cForgeHandshake::HandleModList(cClientHandle * a_Client, const char * a_Dat
 
 	// Send server ModList
 
-	// TODO: max size?
-	cByteBuffer Buf(1024);
-
 	// Send server-side Forge mods registered by plugins
-	auto & ServerMods = m_Client->GetForgeMods();
+	const auto & ServerMods = m_Client->GetForgeMods();
 
-	auto ModCount = ServerMods.size();
+	const auto ModCount = ServerMods.size();
+
+	cByteBuffer Buf(256 * ModCount);
 
 	Buf.WriteBEInt8(Discriminator::ModList);
 	Buf.WriteVarInt32(static_cast<UInt32>(ModCount));
-	for (auto & item: ServerMods)
+	for (const auto & item: ServerMods)
 	{
-		const AString & name = item.first;
-		const AString & version = item.second;
-		Buf.WriteVarUTF8String(name);
-		Buf.WriteVarUTF8String(version);
+		Buf.WriteVarUTF8String(item.first);   // name
+		Buf.WriteVarUTF8String(item.second);  // version
 	}
 	AString ServerModList;
 	Buf.ReadAll(ServerModList);
@@ -264,7 +261,7 @@ void cForgeHandshake::HandleHandshakeAck(cClientHandle * a_Client, const char * 
 	}
 
 	auto Phase = a_Data[1];
-	LOGD("Received client HandshakeAck with phase=%d", Phase);
+	LOGD("Received client HandshakeAck with phase = %d", Phase);
 
 	switch (Phase)
 	{
@@ -336,7 +333,6 @@ void cForgeHandshake::HandleHandshakeAck(cClientHandle * a_Client, const char * 
 
 void cForgeHandshake::DataReceived(cClientHandle * a_Client, const char * a_Data, size_t a_Size)
 {
-	LOGD("Received Forge data: " SIZE_T_FMT " bytes: %s", a_Size, a_Data);
 	if (!m_IsForgeClient)
 	{
 		SetError(Printf("Received unexpected Forge data from non-Forge client (" SIZE_T_FMT " bytes)", a_Size));

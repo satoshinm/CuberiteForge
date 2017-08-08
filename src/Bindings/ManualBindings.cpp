@@ -2349,14 +2349,12 @@ static int tolua_cClientHandle_GetForgeMods(lua_State * L)
 	if (
 		!S.CheckParamSelf("cClientHandle") ||
 		!S.CheckParamEnd(2)
-		)
+	)
 	{
 		return 0;
 	}
 	cClientHandle * Client;
 	S.GetStackValue(1, Client);
-
-	auto Mods = Client->GetForgeMods();
 
 	S.Push(Client->GetForgeMods());
 	return 1;
