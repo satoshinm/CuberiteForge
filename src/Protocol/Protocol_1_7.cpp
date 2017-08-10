@@ -247,7 +247,7 @@ void cProtocol_1_7_2::SendBlockChanges(int a_ChunkX, int a_ChunkZ, const sSetBlo
 
 void cProtocol_1_7_2::SendCameraSetTo(const cEntity & a_Entity)
 {
-    LOGWARNING("SendCameraSet called on 1.7 protocol, ignored");
+	LOGWARNING("SendCameraSet called on 1.7 protocol, ignored");
 }
 
 
@@ -291,8 +291,8 @@ void cProtocol_1_7_2::SendChat(const cCompositeChat & a_Message, eChatType a_Typ
 
 void cProtocol_1_7_2::SendChatRaw(const AString & a_MessageRaw, eChatType a_Type)
 {
-    LOGWARNING("SendChatRaw called on 1.7 protocol, ignored");
-    // TODO: what is this, should it pass to SendChat somehow?
+	LOGWARNING("SendChatRaw called on 1.7 protocol, ignored");
+	// TODO: what is this, should it pass to SendChat somehow?
 }
 
 
@@ -645,7 +645,7 @@ void cProtocol_1_7_2::SendLogin(const cPlayer & a_Player, const cWorld & a_World
 		Pkt.WriteBEUInt8(static_cast<Byte>(a_Player.GetEffectiveGameMode()) | (Server->IsHardcore() ? 0x08 : 0));  // Hardcore flag bit 4
 		Pkt.WriteBEInt8(static_cast<char>(a_World.GetDimension()));
 		Pkt.WriteBEUInt8(2);  // TODO: Difficulty (set to Normal)
-		Pkt.WriteBEUInt8(static_cast<Byte>(std::min(Server->GetMaxPlayers(), 60)));
+		Pkt.WriteBEUInt8(static_cast<Byte>(std::min(Server->GetMaxPlayers(), static_cast<size_t>(60))));
 		Pkt.WriteString("default");  // Level type - wtf?
 	}
 	m_LastSentDimension = a_World.GetDimension();
@@ -1180,7 +1180,8 @@ void cProtocol_1_7_2::SendSoundEffect(const AString & a_SoundName, double a_X, d
 	// New names: http://pokechu22.github.io/Burger/1.11.html#sounds
 	// Old names: https://github.com/SirCmpwn/Craft.Net/blob/bc20a3d3f6c60957ecd04cc7388e225387158eb1/source/Craft.Net.Common/SoundEffect.cs
 	// TODO: translate all
-	static std::map<AString, AString> sounds_new2old = {
+	static std::map<AString, AString> sounds_new2old =
+	{
 		{ "block.chest.open", "random.chestopen" },
 		{ "block.chest.close", "random.chestclosed" },
 
@@ -1211,7 +1212,8 @@ void cProtocol_1_7_2::SendSoundEffect(const AString & a_SoundName, double a_X, d
 		{ "entity.wither.death", "mob.wither.death" },
 	};
 
-	if (sounds_new2old.find(a_SoundName) == sounds_new2old.end()) {
+	if (sounds_new2old.find(a_SoundName) == sounds_new2old.end())
+	{
 		LOGWARNING("Ignoring untranslated named sound effect: %s", a_SoundName.c_str());
 		return;
 	}
@@ -1550,7 +1552,10 @@ void cProtocol_1_7_2::SendWholeInventory(const cWindow & a_Window)
 
 	// 1.7 does not support the 45th "offhand" slot
 	short maxSlots = static_cast<short>(a_Window.GetNumSlots());
-	if (maxSlots > 44) maxSlots = 44;
+	if (maxSlots > 44)
+	{
+		maxSlots = 44;
+	}
 	Pkt.WriteBEInt16(maxSlots);
 
 	cItems Slots;
@@ -1558,7 +1563,10 @@ void cProtocol_1_7_2::SendWholeInventory(const cWindow & a_Window)
 	int i = 0;
 	for (cItems::const_iterator itr = Slots.begin(), end = Slots.end(); itr != end; ++itr)
 	{
-		if (i >= maxSlots) break;
+		if (i >= maxSlots)
+		{
+			break;
+		}
 		WriteItem(Pkt, *itr);
 		++i;
 	}  // for itr - Slots[]
